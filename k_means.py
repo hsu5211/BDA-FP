@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-from tqdm import tqdm
 
 public_df = pd.read_csv('public_data.csv')
 private_df = pd.read_csv('private_data.csv')
@@ -22,19 +21,11 @@ private_scaled = private_scaler.fit_transform(private_features)
 
 print('[public] execute KMeans clustering (15 clusters)...')
 public_kmeans = KMeans(n_clusters=15, random_state=42, n_init=10)
-public_labels = []
-for i in tqdm(range(len(public_scaled)), desc='[public] KMeans clustering'):
-    if i == 0:
-        public_labels = public_kmeans.fit_predict(public_scaled)
-        break
+public_labels = public_kmeans.fit_predict(public_scaled)
 
 print('[private] execute KMeans clustering (23 clusters)...')
 private_kmeans = KMeans(n_clusters=23, random_state=42, n_init=10)
-private_labels = []
-for i in tqdm(range(len(private_scaled)), desc='[private] KMeans clustering'):
-    if i == 0:
-        private_labels = private_kmeans.fit_predict(private_scaled)
-        break
+private_labels = private_kmeans.fit_predict(private_scaled)
 
 public_out = pd.DataFrame({'id': range(1, len(public_labels)+1), 'label': public_labels})
 private_out = pd.DataFrame({'id': range(1, len(private_labels)+1), 'label': private_labels})
